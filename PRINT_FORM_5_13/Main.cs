@@ -57,8 +57,31 @@ namespace PRINT_FORM_5_13
             dt.Rows.Add("01014366", "1500", "31.05.2025");
 
 
-            //XỬ LÝ TIẾP VỚI DATATABLE
-            MessageBox.Show(dt.Rows.Count.ToString());
+            // Tạo DataTable mới để chứa kết quả sau khi rã dòng
+            DataTable dtExpanded = new DataTable();
+            dtExpanded.Columns.Add("ean", typeof(string));
+            dtExpanded.Columns.Add("mnozstvi", typeof(string));
+            dtExpanded.Columns.Add("hsd", typeof(string));
+
+            // Lặp qua từng dòng trong DataTable gốc
+            foreach (DataRow row in dt.Rows)
+            {
+                string ean = row["ean"].ToString();
+                string hsd = row["hsd"].ToString();
+                int mnozstvi = int.Parse(row["mnozstvi"].ToString());
+
+                // Thêm 'mnozstvi' dòng mới, mỗi dòng chỉ có số lượng = 1
+                for (int i = 0; i < mnozstvi; i++)
+                {
+                    dtExpanded.Rows.Add(ean, "1", hsd);
+                }
+            }
+
+            int totalRows = dtExpanded.Rows.Count;
+            int rowsPerPage = 65;
+            int totalPages = (int)Math.Ceiling((double)totalRows / rowsPerPage);
+
+            MessageBox.Show($"{totalPages} trang");
 
         }
     }
